@@ -24,9 +24,9 @@ class WayCreateRequest extends FormRequest
     public function rules()
     {
         return [
+            'name'=>'required|string|min:3',
             'APoint'=>'required|string|min:3',
             'BPoint'=>'required|string|min:3',
-            'product'=>'required|string|min:3',
             'weight'=>'required|integer|min:1',
         ];
     }

@@ -65,22 +65,15 @@ export default{
             this.showForm=!this.showForm
         },
         addNewWay(){
-                axios.post('/addWay',{
+                axios.post('/api/load',{
                     APoint: this.newWay.APoint,
                     BPoint: this.newWay.BPoint,
-                    product: this.newWay.product,
+                    name: this.newWay.product,
                     weight: this.newWay.weight
                 }).then(response => {
                     this.showForm=!this.showForm
                     var result=response.data
-                    console.log(result)
-                    if(result.status=='success'){
-                        var createWay=result.newWay
-                        this.$emit('newway', createWay)
-                    }
-                    if(result.status=='validation'){
-                        window.alert('Введені некоректні дані')
-                    }
+                    this.$emit('newway', result)
                 })
                 .catch(error => {
                     this.errors.record(error.response.data.errors)

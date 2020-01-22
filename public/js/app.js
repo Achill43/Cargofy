@@ -2020,25 +2020,16 @@ function () {
     addNewWay: function addNewWay() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/addWay', {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/load', {
         APoint: this.newWay.APoint,
         BPoint: this.newWay.BPoint,
-        product: this.newWay.product,
+        name: this.newWay.product,
         weight: this.newWay.weight
       }).then(function (response) {
         _this.showForm = !_this.showForm;
         var result = response.data;
-        console.log(result);
 
-        if (result.status == 'success') {
-          var createWay = result.newWay;
-
-          _this.$emit('newway', createWay);
-        }
-
-        if (result.status == 'validation') {
-          window.alert('Введені некоректні дані');
-        }
+        _this.$emit('newway', result);
       })["catch"](function (error) {
         _this.errors.record(error.response.data.errors);
 
@@ -2062,6 +2053,14 @@ function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_AddWay__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/AddWay */ "./resources/js/components/AddWay.vue");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2083,25 +2082,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('addway', _components_AddWay__WEBPACK_IMPORTED_MODULE_2__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['ways'],
   data: function data() {
     return {
-      interval: null
+      ways: null
     };
   },
-  created: function created() {},
-  update: function update() {},
-  mounted: function mounted() {
-    /*
-    window.Echo.channel('test')
-    .listen('PusherWay', (e)=>{
-        console.log("Дані через pusher: "+e);
-    });*/
+  created: function created() {
+    this.GetWays();
   },
-  beforeDestroy: function beforeDestroy() {},
   methods: {
-    RealTimeWays: function RealTimeWays() {}
+    GetWays: function GetWays() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/load').then(function (response) {
+        _this.ways = response.data.data;
+      })["catch"](function (error) {
+        console.log("Винекла помилка: " + error.response.data.message + "; " + error.message);
+      });
+    },
+    updateWays: function updateWays(newWay) {
+      this.ways.unshift(newWay);
+    }
+  },
+  components: {
+    AddWay: _components_AddWay__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 });
 
@@ -38302,27 +38310,57 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "waysDiv" }, [
-    _c("table", { staticClass: "table table-striped table-hover " }, [
-      _vm._m(0),
+  return _c(
+    "div",
+    { staticClass: "waysDiv" },
+    [
+      _c("h2", [_vm._v("Біржа вантажів")]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("addWay", {
+        attrs: { ways: _vm.ways },
+        on: { newway: _vm.updateWays }
+      }),
+      _vm._v(" "),
+      _c("br"),
       _vm._v(" "),
       _c(
-        "tbody",
-        _vm._l(_vm.ways, function(way, id) {
-          return _c("tr", { key: id }, [
-            _c("td", [_vm._v(_vm._s(way.created_at))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(way.APoint) + "-" + _vm._s(way.BPoint))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(way.product))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(way.weight) + " т")])
-          ])
-        }),
-        0
-      )
-    ])
-  ])
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: {
+            click: function($event) {
+              return _vm.GetWays()
+            }
+          }
+        },
+        [_vm._v("Оновити дані")]
+      ),
+      _vm._v(" "),
+      _c("table", { staticClass: "table table-striped table-hover " }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.ways, function(way, id) {
+            return _c("tr", { key: id }, [
+              _c("td", [_vm._v(_vm._s(way.created_at))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(way.points))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(way.name))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(way.weight) + " т")])
+            ])
+          }),
+          0
+        )
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -50515,7 +50553,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Ways__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Ways */ "./resources/js/components/Ways.vue");
-/* harmony import */ var _components_AddWay__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/AddWay */ "./resources/js/components/AddWay.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -50525,46 +50562,11 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
-
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('addway', _components_AddWay__WEBPACK_IMPORTED_MODULE_2__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('ways', _components_Ways__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
-  data: function data() {
-    return {
-      ways: null
-    };
-  },
-  created: function created() {
-    this.GetWays();
-  },
-  update: function update() {},
-  mounted: function mounted() {
-    /*
-    window.Echo.channel('test')
-    .listen('PusherWay', (e)=>{
-        console.log("Дані через pusher: "+e);
-        GetWays()
-    });
-    */
-  },
-  methods: {
-    GetWays: function GetWays() {
-      var _this = this;
-
-      axios.get('/ways').then(function (response) {
-        _this.ways = response.data;
-      })["catch"](function (error) {
-        console.log("Винекла помилка: " + error.response.data.message + "; " + error.message);
-      });
-    },
-    updateWays: function updateWays(newWay) {
-      this.ways.unshift(newWay);
-    }
-  },
   components: {
-    Ways: _components_Ways__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AddWay: _components_AddWay__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Ways: _components_Ways__WEBPACK_IMPORTED_MODULE_1__["default"]
   }
 });
 

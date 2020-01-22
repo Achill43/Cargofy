@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWaysTable extends Migration
+class CreateLoadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateWaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('ways', function (Blueprint $table) {
+        Schema::create('loads', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('APoint');
-            $table->string('BPoint');
-            $table->string('product');
+            $table->string('name');
             $table->float('weight');
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ class CreateWaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ways');
+        Schema::dropIfExists('loads');
     }
 }
